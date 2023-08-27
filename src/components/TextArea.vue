@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-12 mx-4 flex justify-center">
+    <div class="mt-12 mb-6 mx-4 flex justify-center">
         <div class="flex flex-row">
             <textarea v-model="message" cols="75" class="border border-gray-300 rounded p-2"></textarea>
             <div class="ml-2 rounded shadow-sm px-2 flex items-center bg-gray-50 border border-gray-100">

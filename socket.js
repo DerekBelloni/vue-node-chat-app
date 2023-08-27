@@ -16,7 +16,6 @@ app.get('/', (req, res) => {
     res.send(`Listening on port ${port} for socket connections`);
 })
 
-// io.on('connection', (socket) => {
 io.on('connect', (socket) => {
     console.log('a user connected');
 

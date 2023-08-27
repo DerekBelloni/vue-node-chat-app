@@ -3,47 +3,30 @@ import { RouterLink, RouterView } from 'vue-router'
 import ChatBox from './components/ChatBox.vue'
 import Navbar from './components/Navbar.vue'
 import TextArea from './components/TextArea.vue'
-import SocketService from './services/socketio.service.js'
 import { socket, state } from "./services/socket"
-import { onMounted, watch, reactive, ref } from 'vue'
+import { computed } from 'vue'
 
-let msgEvent =  reactive([]);
-let connected = ref(false)
-let message = ref("")
+// const connected = computed(() => {
+//   return state.connected
+// })
 
+// function connect() {
+//    socket.connect()
+// }
 
-onMounted(() => {
-  msgEvent = state.receivedMessages
-  connected = state.connected
-  console.log('message event: ', msgEvent)
-})
+// function disconnect() {
+//   socket.disconnect()
+// }
 
-watch(state.receivedMessages, (newValue, oldValue) => {
-  console.log("New message", newValue);
-})
-
-function connect() {
-   socket.connect()
-   connected = true;
-   console.log('connected: ', connected)
-}
-
-function disconnect() {
-  socket.disconnect()
-  connected = false;
-  console.log('connected: ', connected)
-}
-
-function sendMessage(message) {
-  socket.emit('message', message)
-}
-
+// function sendMessage(message) {
+//   socket.emit('message', message)
+// }
 
 
 </script>
 
 <template>
-  <header>    
+  <!-- <header>    
     <Navbar/>
   </header>
   <main>
@@ -57,17 +40,13 @@ function sendMessage(message) {
           <span :class="connected ? 'text-green-500 font-medium' : 'text-red-500 font-medium' ">Connected: {{connected}}</span>
         </div>
       </div>
-      <div class="flex flex-col">
-        <div v-for="message in state.receivedMessages">
-          {{ message }}
-        </div>
-      </div>
     </div>
-    <ChatBox/>
+    <ChatBox :receivedMessages="state.receivedMessages" :userId="state.userID"/>
   </main>
   <footer>
     <TextArea @send:message="sendMessage"/>
-  </footer>
+  </footer> -->
+  <RouterView></RouterView>
 </template>
 
 <style scoped>
