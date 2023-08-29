@@ -4,8 +4,7 @@
             <RouterLink to="/"><button class="shadow bg-white border border-teal-200 text-teal-500 rounded px-2 py-1 is-cursor">Home</button></RouterLink>
         </div>
       <div class="flex justify-center">
-        <div class="shadow
-         rounded w-1/2 bg-gray-50">
+        <div class="shadow rounded w-1/2 bg-gray-100">
           <div class="text-center mb-6">
             <h1 class="text-gray-500 font-medium text-xl my-2 px-4">Registration</h1>
           </div>
@@ -67,13 +66,17 @@ let newAccountData =  reactive({
 let conPass = ref("")
 let passMismatch = ref(false)
 
-function checkPassConfirm() {
-
-}
+// function checkPassConfirm() {
+//   console.log('soon')
+//   try {
+//     await accountService.login
+//   } catch (error) {
+    
+//   }
+// }
 
 async function createAccount() {
   try {
-    console.log("hello there!");
     await accountService.createAccount(newAccountData)
   } catch (error) {
     console.log("[Error]: ", error);
