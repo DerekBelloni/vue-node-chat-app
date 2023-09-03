@@ -4,9 +4,16 @@ import ChatBox from '../components/ChatBox.vue'
 import Navbar from '../components/Navbar.vue'
 import TextArea from '../components/TextArea.vue'
 import { socket, state } from "../services/socket"
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import TheWelcome from '../components/TheWelcome.vue'
+import { useAccountStore } from '@/stores/useAccountStore'
 
+
+onMounted(() => {
+  console.log('account from store: ', account.userName);
+})
+
+const account = useAccountStore();
 
 const connected = computed(() => {
   return state.connected
@@ -21,16 +28,14 @@ function disconnect() {
 }
 
 function sendMessage(message) {
-  socket.emit('message', message)
+  // socket.emit('message', message, account.userName)
+  socket.emit('message', {message: message, user: account.userName})
 }
 
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
-  <!-- <header>    
+  <header>    
     <Navbar/>
   </header>
   <main>
@@ -49,5 +54,5 @@ function sendMessage(message) {
   </main>
   <footer>
     <TextArea @send:message="sendMessage"/>
-  </footer> -->
+  </footer>
 </template>

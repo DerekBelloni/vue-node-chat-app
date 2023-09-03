@@ -24,7 +24,8 @@ io.on('connect', (socket) => {
     });
 
     socket.on('message', (message) => {
-        console.log('Received message: ', message);
+        console.log('Received message: ', message.message);
+        console.log('Received message sender: ', message.user);
         io.emit('message', message)
     })
     

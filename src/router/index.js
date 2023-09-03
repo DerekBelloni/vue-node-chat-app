@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import { useAuthStore } from '@/stores'
+import { useAuthStore } from '@/stores/useAuthStore'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegistrationView from '../views/RegistrationView.vue'
@@ -9,8 +9,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'Login',
-      component: LoginView
+      name: 'Home',
+      component: HomeView
     },
     {
       path: '/about',
@@ -24,19 +24,20 @@ const router = createRouter({
       path: "/registration",
       name: "Registration",
       component: RegistrationView
+    },
+    {
+      path: "/login",
+      name: "Login",
+      component: LoginView
     }
-    // {
-    //   path: "/login",
-    //   name: "Login",
-    //   component: LoginView
-    // }
   ]
 })
 
-// router.beforeEach(async (to) => {
-//   const publicPages = ['/login'];
-//   const authRequired = !publicPages.includes(to.path);
-//   const auth = useAuthStore
-// })
+router.beforeEach((to, from) => {
+  const publicPages = ['/login', '/registration'];
+  const authRequired = !publicPages.includes(to.path);
+  const authStore = useAuthStore();
+  if (authRequired && !authStore.loggedIn) return { name: 'Login' }
+})
 
 export default router

@@ -6,7 +6,7 @@
             </div>
             <div class="ml-8">
                 <!-- <button class="rounded shadow shadow-amber-500 bg-white px-2 py-1 text-amber-500">Login</button> -->
-                <RouterLink class="rounded shadow shadow-amber-500 bg-white px-2 py-1 text-amber-500" to="/login">Login</RouterLink>
+                <RouterLink class="rounded shadow shadow-amber-500 bg-white px-2 py-1 text-amber-500" to="/login">Logout</RouterLink>
                 <!-- <RouterView></RouterView> -->
             </div>
         </div>

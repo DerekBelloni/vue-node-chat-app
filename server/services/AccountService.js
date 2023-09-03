@@ -2,10 +2,10 @@ import { dbContext } from '../db/DbContext.js';
 import bcrypt from 'bcrypt'
 
 class AccountService {
-    async createAccount(body) {
-        body.password = this.hashPassword(body.password);
-        const newAccount = await dbContext.Account.create(body);
-        return newAccount;
+    async createAccount(req) {
+        req.body.password = this.hashPassword(req.body.password);
+        const newAccount = await dbContext.Account.create(req.body);
+        return {newAccount, session_id: req.session.id}
     }
 
     hashPassword(password) {
@@ -22,27 +22,24 @@ class AccountService {
         const account = await dbContext.Account.find({
             email: req.body.email
         })
-        console.log('account: ', account[0].password);
         const hash = account[0].password
         const providedPass = req.body.password
 
-        bcrypt.compare(providedPass, hash, (err, result) => {
-            if (err) {
-                // throw a forbidden, maybe a toast message
-                console.error(err)
-                return;
-            }
-
-            if (result) {
-                console.log("session id: ", req.session.id);
-                return { account, session_id: req.session.id};
-            } else {
-                // throw an error
-                console.log('kiwi')
-            }
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(providedPass, hash, (err, result) => {
+                if (err) {
+                    console.error(err)
+                    reject(err)
+                    return;
+                }
+    
+                if (result) {
+                    resolve({ account, session_id: req.session.id});
+                } else {
+                    reject(new Error('Invalid login credentials.'))
+                }
+            })
         })
-        return account
-
     }
 }
 

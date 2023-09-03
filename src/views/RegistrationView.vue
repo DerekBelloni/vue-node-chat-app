@@ -31,7 +31,7 @@
                   <span class="font-medium text-gray-400">Password: </span>
                 </div>
                 <div class="ml-8">
-                  <input v-model="newAccountData.password" type="text" class="rounded shadow-inner border border-gray-200 px-1">
+                  <input v-model="newAccountData.password" type="text" class="rounded shadow-inner border border-gray-200 px-1" :error="passErr" error-message="Passwords do not match">
                 </div>
               </div>
               <div class="flex flex-row">
@@ -53,18 +53,25 @@
 </template>
 
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { ref, reactive } from 'vue'
 import  { accountService } from '../services/AccountService'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { useAccountStore } from '@/stores/useAccountStore'
+
+const authStore = useAuthStore();
+const accountStore = useAccountStore();
+const router = useRouter();
 
 let newAccountData =  reactive({
   username: "",
   email: "",
   password: ""
-})
+});
 
 let conPass = ref("")
 let passMismatch = ref(false)
+let passErr = ref(false);
 
 // function checkPassConfirm() {
 //   console.log('soon')
@@ -75,11 +82,32 @@ let passMismatch = ref(false)
 //   }
 // }
 
+function checkPassMatch() {
+  if (newAccountData.password != conPass.value) {
+      passMismatch = true;
+			passErr = true;
+  } else {
+			passMismatch = false;
+			passErr = false;
+	} 
+		
+}
+
 async function createAccount() {
-  try {
-    await accountService.createAccount(newAccountData)
-  } catch (error) {
-    console.log("[Error]: ", error);
-  }
+  checkPassMatch();
+  if (!passMismatch) {
+    try {
+		const account = await accountService.createAccount(newAccountData);
+		authStore.loggedIn = true;	
+		authStore.sessionID = account.session_id;
+		accountStore.userEmail = account.newAccount.email;
+		accountStore.userName = account.newAccount.username;
+		router.push('/');
+    } catch (error) {
+      console.log("[Error]: ", error);
+    }
+  } else {
+		console.log("Passwords dont match")
+	}
 }
 </script>
