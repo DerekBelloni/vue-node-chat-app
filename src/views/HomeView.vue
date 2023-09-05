@@ -5,7 +5,6 @@ import Navbar from '../components/Navbar.vue'
 import TextArea from '../components/TextArea.vue'
 import { socket, state } from "../services/socket"
 import { computed, onMounted } from 'vue'
-import TheWelcome from '../components/TheWelcome.vue'
 import { useAccountStore } from '@/stores/useAccountStore'
 
 
@@ -28,7 +27,6 @@ function disconnect() {
 }
 
 function sendMessage(message) {
-  // socket.emit('message', message, account.userName)
   socket.emit('message', {message: message, user: account.userName})
 }
 

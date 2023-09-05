@@ -6,7 +6,7 @@ class AccountService {
             const res = await api.post('/account/register', body);
             return res.data;
         } catch (error) {
-            console.error("Error: ", error);
+            throw new Error('Failed to create account.')
         }
     }
 
@@ -15,7 +15,17 @@ class AccountService {
             const res = await api.post('/account/login', body);
             return res.data;
         } catch (error) {
-            console.error("Error: ", error);
+            throw new Error('Failed to login.')
+        }
+    }
+
+    async logout() {
+        try {
+            let logoutRes = await api.get('/account/logout')
+            console.log('logout response: ', logoutRes);
+            return 'User has been logged out.'
+        } catch (error) {
+            throw new Error('Failed to logout.')
         }
     }
 }

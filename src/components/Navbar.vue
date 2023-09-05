@@ -5,8 +5,7 @@
                 <RouterLink to="/"><h1 class="font-semibold text-emerald-500">Chat App</h1></RouterLink>
             </div>
             <div class="ml-8">
-                <!-- <button class="rounded shadow shadow-amber-500 bg-white px-2 py-1 text-amber-500">Login</button> -->
-                <RouterLink class="rounded shadow shadow-amber-500 bg-white px-2 py-1 text-amber-500" to="/login">Logout</RouterLink>
+                <button @click="logout()" class="rounded shadow shadow-amber-500 bg-white px-2 py-1 text-amber-500">Logout</button>
                 <!-- <RouterView></RouterView> -->
             </div>
         </div>
@@ -14,7 +13,20 @@
 </template>
 
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { accountService } from '../services/AccountService';
+
+const router = useRouter();
+
+async function logout() {
+    console.log('heres')
+    try {
+        await accountService.logout();
+        router.push('/login');
+    } catch (error) {
+        console.error("Error: ", error);
+    }
+}
 </script>
 
 <style scoped>
