@@ -10,6 +10,7 @@ import { useAccountStore } from '@/stores/useAccountStore'
 
 onMounted(() => {
   console.log('account from store: ', account.userName);
+  // console.log('pinia auth store: ', pinia.state.value.auth);
 })
 
 const account = useAccountStore();

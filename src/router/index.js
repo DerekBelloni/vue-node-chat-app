@@ -33,11 +33,15 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from) => {
+router.beforeEach((to, from, next) => {
   const publicPages = ['/login', '/registration'];
   const authRequired = !publicPages.includes(to.path);
   const authStore = useAuthStore();
-  if (authRequired && !authStore.loggedIn) return { name: 'Login' }
+  if (authRequired && !authStore.sessionID) {
+    next({ name: 'Login' });
+  } else {
+    next();
+  }
 })
 
 export default router

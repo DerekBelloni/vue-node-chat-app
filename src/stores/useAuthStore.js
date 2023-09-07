@@ -7,3 +7,4 @@ export const useAuthStore = defineStore('auth', () => {
 
     return {loggedIn, sessionID}
 })
+

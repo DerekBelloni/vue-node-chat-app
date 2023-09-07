@@ -15,13 +15,17 @@
 <script setup>
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { accountService } from '../services/AccountService';
+import { useAuthStore } from '../stores/useAuthStore';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
 async function logout() {
-    console.log('heres')
     try {
         await accountService.logout();
+        localStorage.removeItem('authStoreState');
+        authStore.loggedIn = false;
+        authStore.sessionID = null;
         router.push('/login');
     } catch (error) {
         console.error("Error: ", error);
