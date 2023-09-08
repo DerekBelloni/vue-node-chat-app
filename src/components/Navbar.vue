@@ -14,11 +14,16 @@
 
 <script setup>
 import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { onMounted } from 'vue';
 import { accountService } from '../services/AccountService';
 import { useAuthStore } from '../stores/useAuthStore';
+import { useAccountStore } from '../stores/useAccountStore'
+import { useToast } from 'vue-toastification';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const accountStore = useAccountStore();
+const toast = useToast();
 
 async function logout() {
     try {
@@ -26,6 +31,7 @@ async function logout() {
         localStorage.removeItem('authStoreState');
         authStore.loggedIn = false;
         authStore.sessionID = null;
+        this.toast.success(`Goodbye ${accountStore.userName}!`) 
         router.push('/login');
     } catch (error) {
         console.error("Error: ", error);

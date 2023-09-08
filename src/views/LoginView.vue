@@ -1,7 +1,7 @@
 <template>
-    <div class="container mt-8 mx-auto">
+    <div class="container mt-16 mx-auto">
       <div class="flex justify-center">
-        <div class="shadow rounded w-1/2 bg-gray-100">
+        <div class="shadow-xl rounded w-1/2 bg-white border border-gray-100">
           <div class="text-center mb-6">
             <h1 class="text-gray-500 font-medium text-xl my-2 px-4">Chat App</h1>
           </div>
@@ -20,16 +20,15 @@
                   <span class="font-medium text-gray-400">Password</span>
                 </div>
                 <div class="ml-6">
-                  <input v-model="loginAccountData.password" type="text" class="rounded shadow-inner border border-gray-200 pl-1">
+                  <input v-model="loginAccountData.password" type="password" class="rounded shadow-inner border border-gray-200 pl-1">
                 </div>
               </div>
               <div class="flex justify-end">
-                <button @click="login()" class="shadow bg-white text-teal-500 rounded px-2 py-1 is-cursor mr-2">Login</button>
+                <button @click="login()" class="shadow bg-teal-500 text-teal-200 rounded-xl px-2 py-1 is-cursor mr-2 font-semibold">Login</button>
               </div>
             </div>
-            <div class="py-4 mx-2 flex flex-row justify-between">
-              <span class="text-gray-400">No Account? Get Registered Today!</span>
-              <RouterLink to="/registration" class="shadow bg-white  text-teal-500 rounded px-2 py-1 is-cursor">Register</RouterLink>
+            <div class="py-4 mx-2 flex flex-row justify-end">
+              <RouterLink to="/registration" class="is-cursor"><span class="text-teal-400">No Account? Get Registered Today!</span></RouterLink>
             </div>
           </div>
         </div>
@@ -61,6 +60,7 @@ async function login() {
     authStore.sessionID = account.session_id;
     accountStore.userEmail = account.account[0].email;
     accountStore.userName = account.account[0].username;
+    console.log("account store user name: ", accountStore.userName)
     router.push('/');
   } catch (error) {
     console.error("Error: ", error)

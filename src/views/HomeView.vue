@@ -7,12 +7,6 @@ import { socket, state } from "../services/socket"
 import { computed, onMounted } from 'vue'
 import { useAccountStore } from '@/stores/useAccountStore'
 
-
-onMounted(() => {
-  console.log('account from store: ', account.userName);
-  // console.log('pinia auth store: ', pinia.state.value.auth);
-})
-
 const account = useAccountStore();
 
 const connected = computed(() => {
