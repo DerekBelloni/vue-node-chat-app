@@ -19,10 +19,19 @@ class AccountService {
         }
     }
 
+    async getAccountBySession(sessionID) {
+        try {
+            const res = await api.post('/account/refresh', {session_id: sessionID});
+            console.log(res.data);
+            return res.data;
+        } catch (error) {
+            throw new Error('Failed to retrieve account data.')
+        }
+    }
+
     async logout() {
         try {
             let logoutRes = await api.get('/account/logout')
-            console.log('logout response: ', logoutRes);
             return 'User has been logged out.'
         } catch (error) {
             throw new Error('Failed to logout.')

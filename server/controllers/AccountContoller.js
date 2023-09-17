@@ -3,22 +3,31 @@ import { accountService } from "../services/AccountService.js";
 export class AccountController {
     static async createAccount(req, res, next) {
         try {
-            console.log('in account controller: ', req.session)
             const account = await accountService.createAccount(req, res);
             res.send(account);
         } catch (error) {
             console.log("error: ", error);
-            res.status(500).json({ error: "An error occurred"})
+            res.status(500).json({ error: "An error occurred"});
         }
     }
 
     static async login(req, res, next) {
         try {
-            const account = await accountService.getAccount(req)
+            const account = await accountService.getAccount(req);
             res.send(account);
         } catch (error) {
-            console.log("error: ", error)
-            res.status(500).json({ error: "An error occurred"})
+            console.log("error: ", error);
+            res.status(500).json({ error: "An error occurred"});
+        }
+    }
+
+    static async getAccountBySession(req, res) {
+        try {
+            const account = await accountService.getAccountBySession(req);
+            res.send(account);
+        } catch (error) {
+            console.log("error: ", error);
+            res.status(500).json({ error: "An error occurred"});
         }
     }
 

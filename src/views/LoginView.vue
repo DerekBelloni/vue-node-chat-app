@@ -1,34 +1,30 @@
 <template>
     <div class="container mt-16 mx-auto">
       <div class="flex justify-center">
-        <div class="shadow-xl rounded w-1/2 bg-white border border-gray-100">
+        <div class="shadow-xl rounded login-card bg-white border border-gray-100">
           <div class="text-center mb-6">
             <h1 class="text-gray-500 font-medium text-xl my-2 px-4">Chat App</h1>
           </div>
           <div class="mx-2 divide-y divide-teal-300">
-            <div class="space-y-2 mb-4 ">
-              <div class="flex flex-col">
-                <div class="ml-6 mb-1">
-                  <span class="font-medium text-gray-400">Email</span>
+            <div class="space-y-4 mb-4 ">
+              <div>
+                <div class="flex flex-col">
+                  <div class="mx-6">
+                    <input v-model="loginAccountData.email" type="text" placeholder="Email" class="w-full rounded h-7 text-sm shadow-inner pl-1 border border-gray-200">
+                  </div>
                 </div>
-                <div class="ml-6">
-                  <input v-model="loginAccountData.email" type="text" class="rounded shadow-inner pl-1 border border-gray-200">
-                </div>
-              </div>
-              <div class="flex flex-col">
-                <div class="ml-6 mb-2">
-                  <span class="font-medium text-gray-400">Password</span>
-                </div>
-                <div class="ml-6">
-                  <input v-model="loginAccountData.password" type="password" class="rounded shadow-inner border border-gray-200 pl-1">
+                <div class="flex flex-col mt-4">
+                  <div class="mx-6">
+                    <input v-model="loginAccountData.password" type="password" placeholder="Password" class="w-full h-7 text-sm rounded shadow-inner border border-gray-200 pl-1 focus:ring-0 focus:ring-transparent">
+                  </div>
                 </div>
               </div>
-              <div class="flex justify-end">
-                <button @click="login()" class="shadow bg-teal-500 text-teal-200 rounded-xl px-2 py-1 is-cursor mr-2 font-semibold">Login</button>
+              <div class="flex justify-end mt-4">
+                <button @click="login()" class="shadow bg-teal-500 text-teal-200 rounded px-2 py-1 is-cursor mr-6 font-semibold">Login</button>
               </div>
             </div>
-            <div class="py-4 mx-2 flex flex-row justify-end">
-              <RouterLink to="/registration" class="is-cursor"><span class="text-teal-400">No Account? Get Registered Today!</span></RouterLink>
+            <div class="pt-2 pb-4 mx-2 flex flex-row justify-end mx-6">
+              <RouterLink to="/registration" class="is-cursor"><span class="text-teal-400 hover:text-teal-600">No Account? Get Registered Today!</span></RouterLink>
             </div>
           </div>
         </div>
@@ -43,10 +39,12 @@ import { reactive } from 'vue'
 import { accountService } from '../services/AccountService'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { useAccountStore } from '@/stores/useAccountStore'
+import { useToast } from 'vue-toastification'
 
 const authStore = useAuthStore();
 const accountStore = useAccountStore();
 const router = useRouter();
+const toast = useToast();
 
 let loginAccountData = reactive({
   email: "",
@@ -56,11 +54,13 @@ let loginAccountData = reactive({
 async function login() {
   try {
     const account = await accountService.login(loginAccountData)
+
     authStore.loggedIn = true;
     authStore.sessionID = account.session_id;
     accountStore.userEmail = account.account[0].email;
     accountStore.userName = account.account[0].username;
-    console.log("account store user name: ", accountStore.userName)
+
+    this.toast.success(`Welcome back ${accountStore.userName}!`)
     router.push('/');
   } catch (error) {
     console.error("Error: ", error)
@@ -68,3 +68,8 @@ async function login() {
 }
 </script>
   
+<style scoped>
+.login-card {
+  min-width: 30%;
+}
+</style>

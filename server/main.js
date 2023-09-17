@@ -5,20 +5,13 @@ import { createServer } from 'http'
 import routes from './routes/Accounts.js'
 import cors from 'cors'
 import sessions from 'express-session'
-import MongoDBSession from 'connect-mongodb-session'
+import {sessionStore, sessionMiddleware} from './db/SessionStore.js'
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
 const httpServer = createServer(app);
 DbConnection.connect();
-
-const MongoDBSessionStore = MongoDBSession(sessions)
-
-const sessionStore = new MongoDBSessionStore({
-    uri: process.env.MONGO_CONNECTION_STRING,
-    collection: 'sessions'
-});
 
 app.use(express.json());
 app.use(cors({
@@ -42,6 +35,7 @@ app.use(sessions({
     saveUninitialized: false,
     unset: 'destroy'
 }));
+app.use(sessionMiddleware);
 app.use('/', routes);
 
 httpServer.listen(port, () => {
