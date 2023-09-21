@@ -24,11 +24,9 @@ class AccountService {
 
     //make checking the account a separate function from getting the account
     async getAccount(req) {
-        console.log("[Session ID]: ", req.session.id)
         const account = await dbContext.Account.find({
             email: req.body.email
         });
-        console.log('account in login, service layer: ', account[0])
         const hash = account[0].password
         const providedPass = req.body.password
         

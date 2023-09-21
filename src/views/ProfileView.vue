@@ -40,7 +40,7 @@
                             </div>
                         </div> -->
                     </div>
-                    <div class="ml-12">
+                    <div class="ml-12 flex-1">
                         <DropZone></DropZone>
                     </div>
                 </div>
@@ -67,7 +67,4 @@ let profileData = reactive({
 function editProfile() {
     editable.value = !editable.value
 }
-// onMounted(() => {
-//     console.log(userName, userEmail);
-// });
 </script>

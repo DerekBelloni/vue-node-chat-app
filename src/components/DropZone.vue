@@ -1,14 +1,56 @@
 <template>
-    <div class="border border-dashed border-gray-500">
-        <span>test</span>
+    <div class="border border-dashed border-gray-500 rounded">
+        <div class="flex flex-col" 
+        :data-active="active"
+        @drop.prevent="onDrop"
+        @dragenter.prevent="setActive"
+        @dragover.prevent="setActive"
+        @dragleaver.prevent="setActive"
+        >
+            <slot></slot>
+            <span>Drop Image to Upload!</span>
+        </div>
     </div>
 </template>
 
-<script >
-export default {
-    data() {
-        return {
-        }
-    },
+<script setup>
+import { onMounted, onUnmounted, ref } from 'vue';
+const emit = defineEmits(['files-dropped']);
+
+let active = ref(false);
+let inActiveTimeout = null
+
+function setActive() {
+    active.value = true;
+    clearTimeout(inActiveTimeout);
 }
+
+function setInactive() {
+    inActiveTimeout = setTimeout(() => {
+        active.value = false;
+    }, 50)
+}
+
+function onDrop(e) {
+    emit('files-dropped', [...e.dataTransfer.files]);
+}
+
+function preventDefaults(e) {
+    setInactive();
+    e.preventDefault();
+}
+
+const events = ['dragenter', 'dragover', 'dragleave', 'drop']
+
+onMounted(() => {
+    events.forEach((eventName) => {
+        document.body.addEventListener(eventName, preventDefaults)
+    })
+})
+
+onUnmounted(() => {
+    events.forEach((eventName) => {
+        document.body.removeEventListener(eventName, preventDefaults)
+    })
+})
 </script>
