@@ -1,14 +1,13 @@
 <template>
-    <div class="border border-dashed border-gray-500 rounded">
-        <div class="flex flex-col" 
+    <div class="border border-dashed border-gray-500 rounded-xl">
+        <div class="flex flex-col text-center" 
         :data-active="active"
         @drop.prevent="onDrop"
         @dragenter.prevent="setActive"
         @dragover.prevent="setActive"
         @dragleaver.prevent="setActive"
         >
-            <slot></slot>
-            <span>Drop Image to Upload!</span>
+            <slot :dropZoneActive="active"></slot>
         </div>
     </div>
 </template>
@@ -54,3 +53,4 @@ onUnmounted(() => {
     })
 })
 </script>
+

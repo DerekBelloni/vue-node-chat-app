@@ -29,18 +29,32 @@ const authStore = useAuthStore();
 const initializeAuthStore = async() => {
     const storedCache = localStorage.getItem('authStoreState');
     const cachedState = storedCache ? JSON.parse(storedCache) : null;
-    
-    if (cachedState && !_.isEmpty(cachedState.sessionID)) {
-        authStore.sessionID = cachedState.sessionID;
-        authStore.loggedIn = cachedState.loggedIn;
-        try {
-            const account = await accountService.getAccountBySession(cachedState.sessionID);
-            accountStore.userName = account.username;
-            accountStore.userEmail = account.email;
-        } catch (error) {
-            console.error("Error fetching account: ", error);
-        }
+
+    if (!cachedState || _.isEmpty(cachedState.sessionID)) {
+        return;
     }
+
+    authStore.sessionID = cachedState.sessionID;
+    authStore.loggedIn = cachedState.loggedIn;
+    
+    try {
+        const account = await accountService.getAccountBySession(cachedState.sessionID);
+        accountStore.userName = account.username;
+        accountStore.userEmail = account.email;
+    } catch (error) {
+        console.error("Error fetching account: ", error);
+    }
+    // if (cachedState && !_.isEmpty(cachedState.sessionID)) {
+    //     authStore.sessionID = cachedState.sessionID;
+    //     authStore.loggedIn = cachedState.loggedIn;
+    //     try {
+    //         const account = await accountService.getAccountBySession(cachedState.sessionID);
+    //         accountStore.userName = account.username;
+    //         accountStore.userEmail = account.email;
+    //     } catch (error) {
+    //         console.error("Error fetching account: ", error);
+    //     }
+    // }
 
 }
 
