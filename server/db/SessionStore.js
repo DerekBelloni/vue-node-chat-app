@@ -11,17 +11,17 @@ const sessionStore = new MongoDBSessionStore({
 
 const sessionMiddleware = sessions({
     secret: process.env.SESSION_SECRET,
-    name: 'appSession',
+    name: 'armadillo',
     cookie: {
-        maxAge: 60 * 60 * 1000, 
+        maxAge: 60 * 60 * 1000,
         secure: false,
         httpOnly: true,
-        domain: 'localhost',
+        domain: 'localhost'
     },
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    unset: 'destroy',
+    unset: 'destroy'
 });
 
 export { sessionStore, sessionMiddleware };

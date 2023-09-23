@@ -72,8 +72,12 @@ class AccountService {
             })
         })
         if (!_.isEmpty(sessionData)) {
+            console.log('wolonky!')
             const account = await dbContext.Account.findById(sessionData.accountID).exec();
             return account
+        }
+        else {
+            res.status(401).json({ message: 'Session expired or not authenticated' });
         }
     }
 

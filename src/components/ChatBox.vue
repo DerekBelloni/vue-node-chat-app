@@ -30,6 +30,6 @@ export default {
 <style scoped>
     .chat-box {
         min-height: 65vh;
-        background-color:azure
+        background-color:white;
     }
 </style>

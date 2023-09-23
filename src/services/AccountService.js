@@ -1,6 +1,11 @@
+
 import { api } from "./Api";
 
 class AccountService {
+    setRouterInstance(router) {
+        this.router = router
+    }
+
     async createAccount(body) {
         try {
             const res = await api.post('/account/register', body);
@@ -22,9 +27,14 @@ class AccountService {
     async getAccountBySession(sessionID) {
         try {
             const res = await api.post('/account/refresh', {session_id: sessionID});
-            console.log(res.data);
-            return res.data;
+            if (res.status === 200) {
+                console.log('banana: ',res.data);
+                return res.data;
+            } else if (res.status === 401) {
+                this.router.push('/login');
+            }
         } catch (error) {
+            this.router.push('/login');
             throw new Error('Failed to retrieve account data.')
         }
     }

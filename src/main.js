@@ -36,7 +36,7 @@ const initializeAuthStore = async() => {
 
     authStore.sessionID = cachedState.sessionID;
     authStore.loggedIn = cachedState.loggedIn;
-    
+
     try {
         const account = await accountService.getAccountBySession(cachedState.sessionID);
         accountStore.userName = account.username;
@@ -44,19 +44,8 @@ const initializeAuthStore = async() => {
     } catch (error) {
         console.error("Error fetching account: ", error);
     }
-    // if (cachedState && !_.isEmpty(cachedState.sessionID)) {
-    //     authStore.sessionID = cachedState.sessionID;
-    //     authStore.loggedIn = cachedState.loggedIn;
-    //     try {
-    //         const account = await accountService.getAccountBySession(cachedState.sessionID);
-    //         accountStore.userName = account.username;
-    //         accountStore.userEmail = account.email;
-    //     } catch (error) {
-    //         console.error("Error fetching account: ", error);
-    //     }
-    // }
-
 }
+accountService.setRouterInstance(router)
 
 initializeAuthStore().then(() => {
     app.mount('#app')

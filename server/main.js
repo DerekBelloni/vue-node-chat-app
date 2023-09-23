@@ -20,21 +20,6 @@ app.use(cors({
     exposedHeaders: ['set-cookie']
 }));
 
-
-app.use(sessions({
-    secret: process.env.SESSION_SECRET,
-    name: 'appSession',
-    cookie: {
-        maxAge: 60 * 60 * 1000,
-        secure: false,
-        httpOnly: true,
-        domain: 'localhost'
-    },
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
-    unset: 'destroy'
-}));
 app.use(sessionMiddleware);
 app.use('/', routes);
 
