@@ -41,6 +41,7 @@ const initializeAuthStore = async() => {
         const account = await accountService.getAccountBySession(cachedState.sessionID);
         accountStore.userName = account.username;
         accountStore.userEmail = account.email;
+        accountStore.accountID = account._id;
     } catch (error) {
         console.error("Error fetching account: ", error);
     }

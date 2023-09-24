@@ -63,15 +63,18 @@
                         <FilePreview @remove="removeFile" v-for="file of files" :key="file.id" :file="file" tag="li"/>
                     </ul>
                 </div>
+                <div class="flex justify-end">
+                    <button class="shadow rounded bg-rose-500 text-rose-100 px-2 py-1" @click="upload()">Submit</button>
+                </div>
             </div>
         </div>
 </template>
 
 <script setup>
 import { useAccountStore } from '../stores/useAccountStore';
+import { profilesService } from '../services/ProfilesService';
 import useFileList from '../composables/fileList'
-import { RouterLink, useRouter } from 'vue-router'
-import { onMounted, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import DropZone from '../components/DropZone.vue'
 import  FilePreview  from  '../components/FilePreview.vue'
 
@@ -96,7 +99,15 @@ function onInputChange(e) {
 }
 
 async function upload() {
-    console.log("hello")
+    let formData = new FormData();
+    console.log('the assholes file: ', files.value[0].file)
+    formData.append('file', files.value[0].file);
+    console.log(formData.get('file').name)
+    try {
+        await profilesService.uploadProfilePic(accountStore.accountID, formData);
+    } catch (error) {
+        throw new Error('Failed to upload image');
+    }
 
 }
 </script>

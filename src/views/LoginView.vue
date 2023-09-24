@@ -59,6 +59,7 @@ async function login() {
     authStore.sessionID = account.session_id;
     accountStore.userEmail = account.account[0].email;
     accountStore.userName = account.account[0].username;
+    accountStore.accountID = account.account[0]._id;
 
     this.toast.success(`Welcome back ${accountStore.userName}!`)
     router.push('/');

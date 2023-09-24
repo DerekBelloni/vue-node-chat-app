@@ -2,10 +2,10 @@ import express from 'express';
 import dotenv from 'dotenv'
 import { DbConnection } from './db/DbConfig.js'
 import { createServer } from 'http'
-import routes from './routes/Accounts.js'
+import routes from './routes/Routes.js'
+// import profileRoutes from './routes/Profiles.js'
 import cors from 'cors'
-import sessions from 'express-session'
-import {sessionStore, sessionMiddleware} from './db/SessionStore.js'
+import {sessionMiddleware} from './db/SessionStore.js'
 
 dotenv.config();
 const app = express();

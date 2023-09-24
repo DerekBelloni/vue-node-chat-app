@@ -72,7 +72,6 @@ class AccountService {
             })
         })
         if (!_.isEmpty(sessionData)) {
-            console.log('wolonky!')
             const account = await dbContext.Account.findById(sessionData.accountID).exec();
             return account
         }

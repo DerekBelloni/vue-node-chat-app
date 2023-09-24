@@ -13,7 +13,7 @@ const sessionMiddleware = sessions({
     secret: process.env.SESSION_SECRET,
     name: 'armadillo',
     cookie: {
-        maxAge: 60 * 60 * 1000,
+        maxAge: 60 * 60 * 1000 * 12,
         secure: false,
         httpOnly: true,
         domain: 'localhost'

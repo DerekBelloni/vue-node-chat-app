@@ -1,9 +1,12 @@
+import { profilesService } from "../services/ProfilesService.js";
 export class ProfilesController {
-    static async getProfile(req, res) {
+    static async uploadProfilePic(req, res) {
         try {
-            console.log('in the profiles controller');
+            await profilesService.uploadProfilePic(req);
         } catch (error) {
             console.log("error: ", error);
         }
     }
 }
+
+export default ProfilesController;
