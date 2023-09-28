@@ -1,7 +1,13 @@
+import { dbContext } from '../db/DbContext.js';
+
 class ProfilesService {
     async uploadProfilePic (req) {
-        console.log('id: ', req.params.accountID);
-        console.log('file, service layer: ', req.file);
+        console.log(req.file);
+        const imageUpload = await dbContext.Image.create({
+            accountID: req.params.accountID,
+            file_name: req.file.filename
+        })
+        return imageUpload;
     }
 }
 

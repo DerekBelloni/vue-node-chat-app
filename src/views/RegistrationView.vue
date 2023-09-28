@@ -76,9 +76,6 @@ let passMismatch = ref(false)
 let passErr = ref(false);
 
 function checkPassMatch() {
-  console.log('new acct data password: ', newAccountData.password);
-  console.log('confirmation password: ', conPass.value);
-
   if (newAccountData.password != conPass.value) {
       passMismatch.value = true;
 			passErr.value = true;

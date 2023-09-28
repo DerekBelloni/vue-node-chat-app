@@ -72,12 +72,14 @@
 
 <script setup>
 import { useAccountStore } from '../stores/useAccountStore';
+import { useUploadStore } from '../stores/useUploadStore';
 import { profilesService } from '../services/ProfilesService';
 import useFileList from '../composables/fileList'
 import { reactive, ref } from 'vue';
 import DropZone from '../components/DropZone.vue'
 import  FilePreview  from  '../components/FilePreview.vue'
 
+const uploadStore = useUploadStore();
 const accountStore = useAccountStore();
 const { userName, userEmail } = accountStore;
 const editable = ref(false);
@@ -100,11 +102,13 @@ function onInputChange(e) {
 
 async function upload() {
     let formData = new FormData();
-    console.log('the assholes file: ', files.value[0].file)
     formData.append('file', files.value[0].file);
-    console.log(formData.get('file').name)
+ 
     try {
-        await profilesService.uploadProfilePic(accountStore.accountID, formData);
+        const imageUpload = await profilesService.uploadProfilePic(accountStore.accountID, formData);
+        console.log('profile view: ', imageUpload);
+        uploadStore.accountID = imageUpload.accountID;
+        uploadStore.fileName = imageUpload.file_name;
     } catch (error) {
         throw new Error('Failed to upload image');
     }

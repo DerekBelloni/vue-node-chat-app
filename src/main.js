@@ -1,30 +1,32 @@
-import './index.css'
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import './index.css';
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import { accountService } from './services/AccountService';
 import { useAccountStore } from './stores/useAccountStore';
-import { useAuthStore } from './stores/useAuthStore'
-import App from './App.vue'
-import router from './router'
-import _ from 'lodash'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faPencil } from '@fortawesome/free-solid-svg-icons'
-import { faPenToSquare } from '@fortawesome/free-regular-svg-icons'
+import { useAuthStore } from './stores/useAuthStore';
+import { useUploadStore } from './stores/useUploadStore';
+import App from './App.vue';
+import router from './router';
+import _ from 'lodash';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 
-library.add(faPencil, faPenToSquare)
+library.add(faPencil, faPenToSquare);
 
-const app = createApp(App).component('font-awesome-icon', FontAwesomeIcon)
-const pinia = createPinia()
+const app = createApp(App).component('font-awesome-icon', FontAwesomeIcon);
+const pinia = createPinia();
 
-app.use(router)
-app.use(pinia)
-app.use(Toast)
+app.use(router);
+app.use(pinia);
+app.use(Toast);
 
 const accountStore = useAccountStore();
 const authStore = useAuthStore();
+const uploadStore = useUploadStore();
 
 const initializeAuthStore = async() => {
     const storedCache = localStorage.getItem('authStoreState');
@@ -39,6 +41,9 @@ const initializeAuthStore = async() => {
 
     try {
         const account = await accountService.getAccountBySession(cachedState.sessionID);
+        uploadStore.fileName = account.uploads[0].file_name;
+        uploadStore.accountID = account.uploads[0].accountID;
+        
         accountStore.userName = account.username;
         accountStore.userEmail = account.email;
         accountStore.accountID = account._id;

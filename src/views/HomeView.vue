@@ -11,6 +11,7 @@
         </div>
         <div class="ml-4 mr-8">
           <span :class="connected ? 'text-green-500 font-medium' : 'text-red-500 font-medium' ">Connected: {{connected}}</span>
+          <img src="" alt="">
         </div>
       </div>
     </div>
@@ -29,8 +30,10 @@ import TextArea from '../components/TextArea.vue'
 import { socket, state } from "../services/socket"
 import { computed, onMounted } from 'vue'
 import { useAccountStore } from '@/stores/useAccountStore'
+import { useUploadStore } from '@/stores/useUploadStore'
 
 const account = useAccountStore();
+const upload = useUploadStore();
 
 const connected = computed(() => {
   return state.connected

@@ -39,10 +39,12 @@ import { reactive } from 'vue'
 import { accountService } from '../services/AccountService'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { useAccountStore } from '@/stores/useAccountStore'
+import { useUploadStore } from '@/stores/useUploadStore'
 import { useToast } from 'vue-toastification'
 
 const authStore = useAuthStore();
 const accountStore = useAccountStore();
+const uploadStore = useUploadStore();
 const router = useRouter();
 const toast = useToast();
 
@@ -57,9 +59,13 @@ async function login() {
 
     authStore.loggedIn = true;
     authStore.sessionID = account.session_id;
+
     accountStore.userEmail = account.account[0].email;
     accountStore.userName = account.account[0].username;
     accountStore.accountID = account.account[0]._id;
+
+    uploadStore.accountID = account.uploads[0].accountID;
+    uploadStore.fileName = account.uploads[0].file_name;
 
     this.toast.success(`Welcome back ${accountStore.userName}!`)
     router.push('/');

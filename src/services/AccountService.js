@@ -28,7 +28,6 @@ class AccountService {
         try {
             const res = await api.post('/account/refresh', {session_id: sessionID});
             if (res.status === 200) {
-                console.log('banana: ',res.data);
                 return res.data;
             } else if (res.status === 401) {
                 this.router.push('/login');

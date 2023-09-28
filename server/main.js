@@ -3,7 +3,6 @@ import dotenv from 'dotenv'
 import { DbConnection } from './db/DbConfig.js'
 import { createServer } from 'http'
 import routes from './routes/Routes.js'
-// import profileRoutes from './routes/Profiles.js'
 import cors from 'cors'
 import {sessionMiddleware} from './db/SessionStore.js'
 

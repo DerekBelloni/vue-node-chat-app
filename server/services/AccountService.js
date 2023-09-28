@@ -32,6 +32,8 @@ class AccountService {
         
         await this.updateSessionWithAcctID(req, account[0]._id);
 
+        const uploads = await this.getAccountUploads(account[0].id);
+
         return new Promise((resolve, reject) => {
             bcrypt.compare(providedPass, hash, (err, result) => {
                 if (err) {
@@ -41,8 +43,7 @@ class AccountService {
                 }
                 if (result) {
                     req.session.isAuth = true;
-                    console.log('[Session auth]: ', req.session.isAuth);
-                    resolve({ account, session_id: req.session.id});
+                    resolve({ account, session_id: req.session.id, uploads: uploads });
                 } else {
                     reject(new Error('Invalid login credentials.'))
                 }
@@ -50,9 +51,15 @@ class AccountService {
         })
     }
 
+    async getAccountUploads(accountID) {
+        const uploads = await dbContext.Image.find({
+            accountID: accountID
+        });
+        return uploads
+    }
+
     async updateSessionWithAcctID(req, accountID) {
         const session = req.session;
-
         if (session) {
             session.accountID = accountID
             await sessionStore.set(session.id, session);
@@ -73,7 +80,8 @@ class AccountService {
         })
         if (!_.isEmpty(sessionData)) {
             const account = await dbContext.Account.findById(sessionData.accountID).exec();
-            return account
+            const uploads = await this.getAccountUploads(account._id); // this needs to come in through a relationship or the node analog of a relationship
+            return { account: account, uploads: uploads };
         }
         else {
             res.status(401).json({ message: 'Session expired or not authenticated' });

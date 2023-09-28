@@ -40,9 +40,7 @@ router.beforeEach((to, from, next) => {
   const publicPages = ['/login', '/registration'];
   const authRequired = !publicPages.includes(to.path);
   const authStore = useAuthStore();
-  console.log('before each, auth store session id: ', authStore.sessionID);
   if (authRequired && !authStore.sessionID) {
-    console.log('here')
     next({ name: 'Login' });
   } else {
     next();
