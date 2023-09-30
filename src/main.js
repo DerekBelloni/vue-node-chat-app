@@ -41,12 +41,13 @@ const initializeAuthStore = async() => {
 
     try {
         const account = await accountService.getAccountBySession(cachedState.sessionID);
-        uploadStore.fileName = account.uploads[0].file_name;
-        uploadStore.accountID = account.uploads[0].accountID;
+        console.log('account in client main.js: ', account.account);
+        uploadStore.fileName = account.uploads[0]?.file_name ?? null;
+        uploadStore.accountID = account.uploads[0]?.accountID ?? null;
         
-        accountStore.userName = account.username;
-        accountStore.userEmail = account.email;
-        accountStore.accountID = account._id;
+        accountStore.userName = account.account.username;
+        accountStore.userEmail = account.account.email;
+        accountStore.accountID = account.account._id;
     } catch (error) {
         console.error("Error fetching account: ", error);
     }

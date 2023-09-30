@@ -27,6 +27,7 @@ io.on('connect', (socket) => {
     socket.on('message', (message) => {
         console.log('Received message: ', message.message);
         console.log('Received message sender: ', message.user);
+        console.log('Received message image filename: ', message.imageFilename)
         io.emit('message', message)
     })
     

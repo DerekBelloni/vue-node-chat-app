@@ -64,8 +64,8 @@ async function login() {
     accountStore.userName = account.account[0].username;
     accountStore.accountID = account.account[0]._id;
 
-    uploadStore.accountID = account.uploads[0].accountID;
-    uploadStore.fileName = account.uploads[0].file_name;
+    uploadStore.accountID = account.uploads[0]?.accountID ?? null;
+    uploadStore.fileName = account.uploads[0]?.file_name ?? null;
 
     this.toast.success(`Welcome back ${accountStore.userName}!`)
     router.push('/');

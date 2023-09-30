@@ -48,7 +48,7 @@ function disconnect() {
 }
 
 function sendMessage(message) {
-  socket.emit('message', {message: message, user: account.userName})
+  socket.emit('message', {message: message, user: account.userName, imageFilename: upload.fileName, accountID: account.accountID})
 }
 </script>
 
