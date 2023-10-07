@@ -43,6 +43,10 @@ router.post('/profile/:accountID', upload.single('file'), (req, res, next) => {
         })
 });
 
+router.post('/profile/replace/:accountID', (req, res) => {
+    console.log('request: ', req);
+})
+
 // Uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

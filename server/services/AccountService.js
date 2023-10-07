@@ -81,11 +81,12 @@ class AccountService {
         })
         if (!_.isEmpty(sessionData)) {
             const account = await dbContext.Account.findById(sessionData.accountID).exec();
-            const uploads = await this.getAccountUploads(account._id); // this needs to come in through a relationship or the node analog of a relationship
+            const uploads = await this.getAccountUploads(account._id);
             return { account: account, uploads: uploads };
         }
         else {
-            res.status(401).json({ message: 'Session expired or not authenticated' });
+            // res.status(401).json({ message: 'Session expired or not authenticated' });
+            throw new Error(err)
         }
     }
 

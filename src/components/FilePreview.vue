@@ -1,6 +1,6 @@
 <template>
-    <component :is="tag" class="file-preview">
-        <button @click="$emit('remove', file)" class="close-icon flex items-center justify-center" aria-label="Remove">x</button>
+    <component :is="tag">
+        <button @click="$emit('remove', file)" class="flex items-center justify-end" aria-label="Remove">x</button>
         <img :src="file.url" :alt="file.file.name" :title="file.file.name" />
     </component>
 </template>

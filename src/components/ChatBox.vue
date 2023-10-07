@@ -24,7 +24,8 @@ import { uploadsService } from "../services/UploadsService";
 const imageUrls = ref({});
 
 async function getProfilePic(message) {
-    return await uploadsService.getProfilePic(message);
+    let fileName = message.imageFilename
+    return await uploadsService.getProfilePic(fileName);
 }
 
 watchEffect(() => {

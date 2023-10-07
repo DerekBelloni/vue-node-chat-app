@@ -1,11 +1,12 @@
 import { api } from './Api';
 
 class UploadsService {
-    async getProfilePic(message) {
+    async getProfilePic(fileName) {
         try {
-            const profilePic = await api.get(`/upload/${message.imageFilename}`, { responseType: 'arraybuffer' }).catch(error => {
+            const profilePic = await api.get(`/upload/${fileName}`, { responseType: 'arraybuffer' }).catch(error => {
                 console.error("API call failed: ", error);
             });
+            // look into changing this from btoa to 'Buffer.from(str, base64)'
             const base64Image = btoa(String.fromCharCode(...new Uint8Array(profilePic.data)));   
             const imageUrl = `data:image/jpeg;base64,${base64Image}`;
             return imageUrl;   

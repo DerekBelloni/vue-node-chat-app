@@ -3,6 +3,8 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import PrimeVue from 'primevue/config';
+import Tailwind from "primevue/passthrough/tailwind";
 import { accountService } from './services/AccountService';
 import { useAccountStore } from './stores/useAccountStore';
 import { useAuthStore } from './stores/useAuthStore';
@@ -23,6 +25,7 @@ const pinia = createPinia();
 app.use(router);
 app.use(pinia);
 app.use(Toast);
+app.use(PrimeVue, { unstyled: true, pt: Tailwind});
 
 const accountStore = useAccountStore();
 const authStore = useAuthStore();
@@ -31,6 +34,7 @@ const uploadStore = useUploadStore();
 const initializeAuthStore = async() => {
     const storedCache = localStorage.getItem('authStoreState');
     const cachedState = storedCache ? JSON.parse(storedCache) : null;
+    console.log('cached state: ', cachedState);
 
     if (!cachedState || _.isEmpty(cachedState.sessionID)) {
         return;
@@ -41,15 +45,14 @@ const initializeAuthStore = async() => {
 
     try {
         const account = await accountService.getAccountBySession(cachedState.sessionID);
-        console.log('account in client main.js: ', account.account);
         uploadStore.fileName = account.uploads[0]?.file_name ?? null;
         uploadStore.accountID = account.uploads[0]?.accountID ?? null;
         
-        accountStore.userName = account.account.username;
-        accountStore.userEmail = account.account.email;
-        accountStore.accountID = account.account._id;
+        accountStore.userEmail = account.account.email ?? null;
+        accountStore.userName = account.account.username ?? null;
+        accountStore.accountID = account.account._id ?? null;
     } catch (error) {
-        console.error("Error fetching account: ", error);
+        router.push('/login');
     }
 }
 accountService.setRouterInstance(router)
