@@ -164,16 +164,18 @@ let imageUrl = ref({});
 
 onMounted(() => {
     if (!_.isEmpty(uploadStore.fileName)) {
-        getProfilePic().then(url => {
-            imageUrl.value[uploadStore.fileName] = url;
-        })
-        console.log('in mounted: ', imageUrl.value);
+        getProfilePic();
     }
 })
 
 async function getProfilePic() {
     let fileName = uploadStore.fileName;
-    return await uploadsService.getProfilePic(fileName);
+    try {
+        const fetchedImageUrl = await uploadsService.getProfilePic(fileName);
+        imageUrl.value[fileName] = fetchedImageUrl;
+    } catch (error) {
+        console.error("Error fetching profile pic:", error);
+    }
 }
 
 function editProfile() {
@@ -186,28 +188,40 @@ function onInputChange(e) {
 }
 
 async function replacePic(formData) {
-    console.log('form data in replace: ', formData);
+    try {
+        // make this a promise that calls 'getProfilePic()'
+        const replacementUpload = await profilesService.replaceProfilePic(accountStore.accountID, formData);
+        console.log('replacement: ', replacementUpload)
+        uploadStore.accountID = replacementUpload.accountID;
+        uploadStore.fileName = replacementUpload.file_name;
+        this.toast.success(`Your profile picture has been successfully updated!`)
+        getProfilePic();
+    } catch (error) {
+        console.log("Error replacing old profile pic: ", error)
+    }
 }
 
 async function upload() {
     let formData = new FormData();
     formData.append('file', files.value[0].file);
     
-    if (!_.isEmpty(accountStore.fileName)) {
-        console.log('hello')
+    if (!_.isEmpty(uploadStore.fileName)) {
+        console.log('here')
+        let fileToRemove = uploadStore.fileName
+        formData.append('fileToRemove', fileToRemove);
         replacePic(formData);
         return;
     }
  
-    // try {
-    //     const imageUpload = await profilesService.uploadProfilePic(accountStore.accountID, formData);
-    //     uploadStore.accountID = imageUpload.accountID;
-    //     uploadStore.fileName = imageUpload.file_name;
-    //     this.toast.success(`Your profile picture has been successfully uploaded!`)
-    //     getProfilePic();
-    // } catch (error) {
-    //     throw new Error('Failed to upload image');
-    // }
+    try {
+        const imageUpload = await profilesService.uploadProfilePic(accountStore.accountID, formData);
+        uploadStore.accountID = imageUpload.accountID;
+        uploadStore.fileName = imageUpload.file_name;
+        this.toast.success(`Your profile picture has been successfully uploaded!`)
+        getProfilePic();
+    } catch (error) {
+        console.log('Failed to upload image', error);
+    }
 
 }
 </script>

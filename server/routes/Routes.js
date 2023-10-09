@@ -8,6 +8,7 @@ import { UploadsController } from '../controllers/UploadsController.js';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import fs from 'fs'
 
 dotenv.config();
 
@@ -33,6 +34,21 @@ router.post('/account/register', AccountController.createAccount);
 router.get('/account/logout', AccountController.logout);
 
 // Profile
+router.post('/profile/replace/:accountID', upload.single('file'), async (req, res) => {
+    console.log(req.body.fileToRemove)
+    if (!_.isEmpty(req.body.fileToRemove)) {
+        fs.unlink(`./uploads/${req.body.fileToRemove}`, (err) => {
+            if (err) {
+                return res.status(500).send({ error: 'Failed to delete file' });
+            }
+            console.log('file deleted successfully');
+            ProfilesController.replaceProfilePic(req, res, () => {
+                res.status(200).send({ message: "Profile picture replaced successfully!"})
+            });
+        })
+    }
+})
+
 router.post('/profile/:accountID', upload.single('file'), (req, res, next) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded');
@@ -42,10 +58,6 @@ router.post('/profile/:accountID', upload.single('file'), (req, res, next) => {
             next();
         })
 });
-
-router.post('/profile/replace/:accountID', (req, res) => {
-    console.log('request: ', req);
-})
 
 // Uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
