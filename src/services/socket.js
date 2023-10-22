@@ -4,6 +4,7 @@ import { reactive } from "vue"
 export const state = reactive({
   connected: false,
   receivedMessages: [],
+  room: "",
   userID: ""
 })
 
@@ -13,9 +14,9 @@ export const socket = io(URL)
 
 socket.on("connect", () => {
   state.connected = true;
-  console.log("socket id: ", socket.id)
-  state.userID = socket.id
-  console.log("user id: ", state.userID)
+  console.log("socket id: ", socket.id);
+  state.userID = socket.id;
+  console.log("user id: ", state.userID);
 })
 
 socket.on("disconnect", () => {
@@ -24,12 +25,18 @@ socket.on("disconnect", () => {
 })
 
 socket.on("message", (message) => {
-  console.log("message received: ", message)
+  console.log("message received: ", message);
+})
+
+socket.on("chatHistory", (chatHistory) => {
+  const uniqueHistory = chatHistory.filter((msg) => {
+    return !state.receivedMessages.some((existingMsg) => existingMsg.id === msg.id);
+  })
+
+  uniqueHistory.forEach((msg) => state.receivedMessages.unshift(msg));
 })
 
 socket.on("broadcast", (...args) => {
-  console.log('Message received in client: ', args)
-  state.receivedMessages.push(...args)
-  console.log('state messages: ', state.receivedMessages)
+  state.receivedMessages.push(...args);
 })
 

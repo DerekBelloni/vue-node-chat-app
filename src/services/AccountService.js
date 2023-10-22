@@ -11,7 +11,7 @@ class AccountService {
             const res = await api.post('/account/register', body);
             return res.data;
         } catch (error) {
-            throw new Error('Failed to create account.');
+            console.log("Error creating account: ", error);
         }
     }
 
@@ -20,7 +20,7 @@ class AccountService {
             const res = await api.post('/account/login', body);
             return res.data;
         } catch (error) {
-            throw new Error('Failed to login.');
+            console.log("Error logging in: ", error);
         }
     }
 
@@ -34,7 +34,7 @@ class AccountService {
             }
         } catch (error) {
             this.router.push('/login');
-            throw new Error('Failed to retrieve account data.');
+            console.log("Error retrieving account: ", error);
         }
     }
 
@@ -43,7 +43,7 @@ class AccountService {
             let logoutRes = await api.get('/account/logout');
             return 'User has been logged out.';
         } catch (error) {
-            throw new Error('Failed to logout.');
+            console.log("Error logging out: ", error);
         }
     }
 }

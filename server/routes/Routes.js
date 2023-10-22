@@ -34,24 +34,20 @@ router.post('/account/register', AccountController.createAccount);
 router.get('/account/logout', AccountController.logout);
 
 // Profile
-router.post('/profile/replace/:accountID', upload.single('file'), async (req, res) => {
-    console.log(req.body.fileToRemove)
-    if (!_.isEmpty(req.body.fileToRemove)) {
-        fs.unlink(`./uploads/${req.body.fileToRemove}`, (err) => {
-            if (err) {
-                return res.status(500).send({ error: 'Failed to delete file' });
-            }
-            console.log('file deleted successfully');
-            ProfilesController.replaceProfilePic(req, res, () => {
-                res.status(200).send({ message: "Profile picture replaced successfully!"})
-            });
-        })
-    }
-})
-
 router.post('/profile/:accountID', upload.single('file'), (req, res, next) => {
+    let fileToRemove = req.body.fileToRemove;
     if (!req.file) {
         return res.status(400).send('No file uploaded');
+    }
+    if (fileToRemove) {
+        // abstract into its own function
+        const filePath = path.join(__dirname, '..', 'uploads', req.body.fileToRemove);
+        fs.unlink(filePath, (err) => {
+            if (err) console.log("error removing file: ", err)
+            else {
+                console.log(`\nDeleted file: ${fileToRemove}`)
+            }
+        })
     }
     ProfilesController.uploadProfilePic(req, res)
         .then(() => {

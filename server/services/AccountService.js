@@ -69,7 +69,6 @@ class AccountService {
     }
 
     async getAccountBySession(req) {
-        console.log('get account by session, session id: ', req.session.id)
         const sessionData = await new Promise((resolve, reject) => {
             sessionStore.get(req.session.id, (err, data) => {
                 if (err) {

@@ -7,16 +7,19 @@
             <div class="container mx-auto mt-16">
                 <div class="card flex align-items-center justify-content-center">
                     <Card :pt="{ 
-                        root: { class: 'bg-gray-50 rounded shadow-lg'},
-                        header: { class: 'flex justify-center mt-2'},
+                        root: { class: 'bg-gray-100 rounded shadow-xl'},
+                        header: { class: 'flex justify-center mt-4'},
                         title: { class: 'flex justify-center font-semibold text-2xl' },
                         subtitle: { class: 'flex justify-center font-medium text-center'},
                         content: { class: 'flex text-center px-2'}
                     }" style="width: 25em">
-                        <template #header>
-                            <img alt="user header" class="rounded-full" :src="imageUrl[uploadStore.fileName]" />
+                        <template #header v-if="uploadStore.fileName">
+                            <img alt="user header" class="rounded-full h-48 w-48" :src="imageUrl[uploadStore.fileName]" />
                         </template>
-                        <template #title>
+                        <template #header v-else>
+                            <font-awesome-icon class="rounded-full h-48 w-48 bg-teal-400" icon="fa-regular fa-face-dizzy" />
+                        </template>
+                        <font-awesome-icon icon="fa-regular fa-face-dizzy" />                        <template #title>
                             <div class="flex">
                                 <div class="flex text-center">
                                     <span>{{accountStore.userName}}</span>
@@ -63,7 +66,7 @@
                                     <div class="flex flex-row justify-center space-x-2 mt-2">
                                         <div>
                                             <label for="file-input" class="bg-blue-400 text-white rounded file-label">Select a file</label>
-                                            <input type="file" id="file-input" multiple @change="onInputChange" />
+                                            <input type="file" id="file-input" @change="onInputChange" />
                                         </div>
                                         <div>
                                             <Button class="bg-green-400 text-white rounded px-1 mb-1" @click="upload()">Upload</Button>
@@ -78,7 +81,7 @@
         </div>
         <div class="grid col-span-8">
             <div class="flex flex-col space-y-6">
-                <div class="container mt-16">
+                <!-- <div class="container mt-16">
                     <Card class="mr-6 bg-gray-50"
                     :pt="{
                         root: { class: 'bg-gray-50 rounded shadow-lg'},
@@ -130,27 +133,27 @@
                             </TabPanel>
                         </TabView>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import { reactive, ref, onMounted } from 'vue';
 import { useAccountStore } from '../stores/useAccountStore';
 import { useUploadStore } from '../stores/useUploadStore';
 import { profilesService } from '../services/ProfilesService';
+import { uploadsService } from '../services/UploadsService';
+import DropZone from '../components/DropZone.vue'
+import  FilePreview  from  '../components/FilePreview.vue'
+import useFileList from '../composables/fileList';
 import Card from 'primevue/card';
 import Fieldset from 'primevue/fieldset';
 import AutoComplete from 'primevue/autocomplete';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
-import useFileList from '../composables/fileList';
-import { reactive, ref, onMounted } from 'vue';
-import DropZone from '../components/DropZone.vue'
-import  FilePreview  from  '../components/FilePreview.vue'
 import { useToast } from 'vue-toastification'
-import { uploadsService } from '../services/UploadsService';
 import _ from 'lodash';
 
 const uploadStore = useUploadStore();
@@ -158,8 +161,7 @@ const accountStore = useAccountStore();
 const toast = useToast();
 const { userName, userEmail } = accountStore;
 const editable = ref(false);
-const { files, addFiles, removeFile } = useFileList()
-
+const { file, addFiles, removeFile } = useFileList()
 let imageUrl = ref({});
 
 onMounted(() => {
@@ -187,32 +189,16 @@ function onInputChange(e) {
     e.target.value = null;
 }
 
-async function replacePic(formData) {
-    try {
-        // make this a promise that calls 'getProfilePic()'
-        const replacementUpload = await profilesService.replaceProfilePic(accountStore.accountID, formData);
-        console.log('replacement: ', replacementUpload)
-        uploadStore.accountID = replacementUpload.accountID;
-        uploadStore.fileName = replacementUpload.file_name;
-        this.toast.success(`Your profile picture has been successfully updated!`)
-        getProfilePic();
-    } catch (error) {
-        console.log("Error replacing old profile pic: ", error)
-    }
-}
 
 async function upload() {
     let formData = new FormData();
-    formData.append('file', files.value[0].file);
-    
-    if (!_.isEmpty(uploadStore.fileName)) {
-        console.log('here')
-        let fileToRemove = uploadStore.fileName
+    formData.append('file', file.value.file);
+
+    if (!_.isNull(uploadStore.fileName)) {
+        let fileToRemove = uploadStore.fileName;
         formData.append('fileToRemove', fileToRemove);
-        replacePic(formData);
-        return;
     }
- 
+    
     try {
         const imageUpload = await profilesService.uploadProfilePic(accountStore.accountID, formData);
         uploadStore.accountID = imageUpload.accountID;

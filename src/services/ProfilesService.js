@@ -1,9 +1,10 @@
 import { api } from './Api';
 
 class ProfilesService {
-    async uploadProfilePic(accountID, formData) {
+    async uploadProfilePic(accountID, formData, replace) {
+        console.log('replace in client: ', replace);
         try {
-            const res = await api.post(`/profile/${accountID}`, formData);
+            const res = await api.post(`/profile/${accountID}`, formData, replace);
             return res.data
         } catch (error) {
             console.log('Failed to upload profile picture: ', error);

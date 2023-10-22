@@ -16,8 +16,9 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import { faFaceDizzy } from '@fortawesome/free-regular-svg-icons';
 
-library.add(faPencil, faPenToSquare);
+library.add(faPencil, faPenToSquare, faFaceDizzy);
 
 const app = createApp(App).component('font-awesome-icon', FontAwesomeIcon);
 const pinia = createPinia();
@@ -34,8 +35,8 @@ const uploadStore = useUploadStore();
 const initializeAuthStore = async() => {
     const storedCache = localStorage.getItem('authStoreState');
     const cachedState = storedCache ? JSON.parse(storedCache) : null;
-    console.log('cached state: ', cachedState);
 
+    // probably dont need a dual check
     if (!cachedState || _.isEmpty(cachedState.sessionID)) {
         return;
     }

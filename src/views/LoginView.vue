@@ -57,6 +57,11 @@ async function login() {
   try {
     const account = await accountService.login(loginAccountData)
 
+    if (!account) {
+      this.toast.error('Invalid login credentials');
+      return;
+    }
+
     authStore.loggedIn = true;
     authStore.sessionID = account.session_id;
 
